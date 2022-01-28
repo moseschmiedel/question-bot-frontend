@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+use v5.34;
+use strict;
+use warnings;
+use Cwd;
+use sigtrap qw/die normal-signals/;
+
+my $pid = fork;
+
+if ($pid == 0) {
+	say getcwd();
+	system "find . -name '*.elm' | entr elm make src/Main.elm --output=bulid/elm.js";
+} else {
+	system "live-server --open=index.html";
+}
+
+waitpid $pid, 0;
